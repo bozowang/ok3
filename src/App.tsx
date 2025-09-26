@@ -98,7 +98,6 @@ const App: React.FC = () => {
         setIsSubmitting(true);
         const TIMEOUT_DURATION = 15000; // 15 seconds
 
-        // FIX: Added a comma after T to disambiguate from JSX tag syntax.
         const timeoutPromise = <T,>(message: string): Promise<T> => 
             new Promise((_, reject) => 
                 setTimeout(() => reject(new Error(message)), TIMEOUT_DURATION)
