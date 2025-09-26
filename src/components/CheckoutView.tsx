@@ -1,4 +1,5 @@
-﻿import React, { useState } from 'react';
+// Fix: Replaced placeholder content with the correct component implementation.
+import React, { useState } from 'react';
 import type { OrderDetails } from '../types';
 
 interface CheckoutViewProps {
