@@ -98,7 +98,8 @@ const App: React.FC = () => {
         setIsSubmitting(true);
         const TIMEOUT_DURATION = 15000; // 15 seconds
 
-        const timeoutPromise = (message: string): Promise<never> => 
+        // FIX: Added a comma after T to disambiguate from JSX tag syntax.
+        const timeoutPromise = <T,>(message: string): Promise<T> => 
             new Promise((_, reject) => 
                 setTimeout(() => reject(new Error(message)), TIMEOUT_DURATION)
             );
@@ -106,7 +107,7 @@ const App: React.FC = () => {
         try {
             const { orderNumber, estimatedDeliveryTime } = await Promise.race([
                 processOrder(details, cart),
-                timeoutPromise('處理訂單時發生超時 (Gemini API)')
+                timeoutPromise<{ orderNumber: string; estimatedDeliveryTime: string; }>('處理訂單時發生超時 (Gemini API)')
             ]);
 
             const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -124,7 +125,7 @@ const App: React.FC = () => {
 
             const saveResult = await Promise.race([
                 saveOrder(newConfirmedOrder),
-                timeoutPromise('儲存訂單時發生超時 (Google Sheets API)')
+                timeoutPromise<{ success: boolean; message: string; }>('儲存訂單時發生超時 (Google Sheets API)')
             ]);
 
             if (!saveResult.success) {
