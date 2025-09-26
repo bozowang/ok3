@@ -1,4 +1,3 @@
-// Fix: Replaced placeholder content with the correct component implementation.
 import React, { useState } from 'react';
 import type { OrderDetails } from '../types';
 
@@ -54,7 +53,7 @@ const CheckoutView: React.FC<CheckoutViewProps> = ({ onSubmit, onBack, isLoading
             <div className="form-group">
                 <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700">付款方式 *</label>
                 <select id="paymentMethod" name="paymentMethod" value={details.paymentMethod} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500">
-                    <option value="">請選擇付款方式</option>
+                    <option value="" disabled>請選擇付款方式</option>
                     <option value="貨到付款">貨到付款</option>
                     <option value="信用卡">信用卡</option>
                     <option value="LINE Pay">LINE Pay</option>
