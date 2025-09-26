@@ -197,4 +197,4 @@ const App: React.FC = () => {
     );
 };
 
-export default App;
+export default App;/上面的可以代替這個嗎
