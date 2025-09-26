@@ -98,8 +98,6 @@ const App: React.FC = () => {
         setIsSubmitting(true);
         const TIMEOUT_DURATION = 15000; // 15 seconds
 
-        // FIX: Explicitly type the timeout promise to return `never` on resolution,
-        // which helps TypeScript correctly infer the type from Promise.race.
         const timeoutPromise = (message: string): Promise<never> => 
             new Promise((_, reject) => 
                 setTimeout(() => reject(new Error(message)), TIMEOUT_DURATION)
