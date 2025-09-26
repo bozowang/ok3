@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { View } from './types';
 import type { Restaurant, MenuItem, CartItem, ConfirmedOrder, OrderDetails, AlertState } from './types';
@@ -96,8 +96,20 @@ const App: React.FC = () => {
 
     const handleSubmitOrder = async (details: OrderDetails) => {
         setIsSubmitting(true);
+        const TIMEOUT_DURATION = 15000; // 15 seconds
+
+        // FIX: Explicitly type the timeout promise to return `never` on resolution,
+        // which helps TypeScript correctly infer the type from Promise.race.
+        const timeoutPromise = (message: string): Promise<never> => 
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error(message)), TIMEOUT_DURATION)
+            );
+
         try {
-            const { orderNumber, estimatedDeliveryTime } = await processOrder(details, cart);
+            const { orderNumber, estimatedDeliveryTime } = await Promise.race([
+                processOrder(details, cart),
+                timeoutPromise('處理訂單時發生超時 (Gemini API)')
+            ]);
 
             const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
             const total = subtotal + SHIPPING_FEE;
@@ -112,7 +124,11 @@ const App: React.FC = () => {
                 total,
             };
 
-            const saveResult = await saveOrder(newConfirmedOrder);
+            const saveResult = await Promise.race([
+                saveOrder(newConfirmedOrder),
+                timeoutPromise('儲存訂單時發生超時 (Google Sheets API)')
+            ]);
+
             if (!saveResult.success) {
                 throw new Error(saveResult.message || '無法將訂單儲存至後端系統。');
             }
